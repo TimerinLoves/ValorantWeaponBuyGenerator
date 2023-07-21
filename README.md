@@ -1,6 +1,7 @@
 # ValorantWeaponBuyGenerator
 Just a fun little project, use on your own risk
 
+# Make sure to download as a zip file
 
 # In case of starting problems, open your cmd as administrator and type in:
 
