@@ -1,2 +1,38 @@
 # ValorantWeaponBuyGenerator
 Just a fun little project, use on your own risk
+
+
+# In case of starting problems, open your cmd as administrator and type in:
+
+# pip install pyautogui pytesseract pillow pynput
+
+# and also install:
+
+# https://github.com/UB-Mannheim/tesseract/wiki
+
+# make sure valorant is in fullscreen window mode
+
+afterwards it should work.
+
+# Current button to generate ingame: P
+
+
+# Bug Fixes
+
+Incase of a wrong credit read: make sure your numbers on the bottom right are
+easy to, maybe move the mouse a bit.
+
+Incase of the programm not working:
+
+go to line 16 and make sure the path to tesseract is correct.
+
+
+if it still doesn't work or the path is correct:
+
+go to line 20 and adjust the 4 numbers there, i recommend screenshotting your valorant
+putting it into paint.net, the number on the bottom right, you want to select it with the selection
+tool, and read the 4 numbers on the bottom left of paint.net, they are your x, y, height and width.
+
+input the new numbers instead.
+
+if it still doesn't work, dm me on Discord: Timerin
