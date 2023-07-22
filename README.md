@@ -3,6 +3,8 @@ Just a fun little project, use on your own risk
 
 # Make sure to download as a zip file
 
+# Make sure you have the newest python installed from microsoft store
+
 # In case of starting problems, open your cmd as administrator and type in:
 
 # pip install pyautogui pytesseract pillow pynput
