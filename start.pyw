@@ -18,7 +18,7 @@ def get_credits_from_screen():
     
     # Adjust these coordinates to capture the region where the credits are displayed in Valorant.
     # You can use a screenshot tool to find the exact coordinates.
-    credits_region = (1813, 1037, 57, 15)  # Replace x, y, width, and height with appropriate values.
+    credits_region = (1820, 1035, 50, 15)  # Replace x, y, width, and height with appropriate values.
 
     # Capture the screen in the specified region
     screenshot = pyautogui.screenshot(region=credits_region)
