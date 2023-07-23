@@ -7,7 +7,7 @@ Just a fun little project, use on your own risk
 
 # In case of starting problems, open your cmd as administrator and type in:
 
-# pip install pyautogui pytesseract pillow pynput opencv-python
+# pip install pyautogui pytesseract pillow pynput opencv-python imagehash
 
 # and also install:
 
