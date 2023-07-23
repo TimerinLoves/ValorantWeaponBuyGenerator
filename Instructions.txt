@@ -2,7 +2,7 @@ Make sure you have python from the microsoft store installed (newest version)
 
 In case of starting problems, open your cmd as administrator and type in:
 
-pip install pyautogui pytesseract pillow pynput opencv-python
+pip install pyautogui pytesseract pillow pynput opencv-python imagehash
 
 and also install:
 
