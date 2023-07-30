@@ -6,6 +6,7 @@ import pytesseract
 import os
 from pynput import keyboard
 import time
+import threading
 
 last_purchase = None
 prev_b_key_time = 0
@@ -18,7 +19,7 @@ def get_credits_from_screen():
     
     # Adjust these coordinates to capture the region where the credits are displayed in Valorant.
     # You can use a screenshot tool to find the exact coordinates.
-    credits_region = (1820, 1035, 50, 15)  # Replace x, y, width, and height with appropriate values.
+    credits_region = (1772, 1029, 143, 30)  # Replace x, y, width, and height with appropriate values.
 
     # Capture the screen in the specified region
     screenshot = pyautogui.screenshot(region=credits_region)
@@ -137,6 +138,15 @@ def get_suggested_purchase():
         armor_label.config(text="")
         return
 
+def on_key_press(key):
+    global b_key_binding
+
+    try:
+        if key.char == b_key_binding:
+            on_b_key_press()
+    except AttributeError:
+        pass
+
 def on_b_key_press():
     global prev_b_key_time
 
@@ -148,14 +158,9 @@ def on_b_key_press():
     print(f"{b_key_binding.upper()} key pressed.")
     print("Suggested weapon:", weapon_label.cget("text"))
 
-def on_key_press(key):
-    global b_key_binding
-
-    try:
-        if key.char == b_key_binding:
-            on_b_key_press()
-    except AttributeError:
-        pass
+def pynput_listener():
+    with keyboard.Listener(on_press=on_key_press) as listener:
+        listener.join()
 
 def update_key_binding():
     global b_key_binding
@@ -164,23 +169,55 @@ def update_key_binding():
         b_key_binding = new_binding.lower()
     key_binding_entry.delete(0, tk.END)
 
-# Create a Tkinter window
+# Create the Tkinter window
 root = tk.Tk()
-root.title("Valorant Suggested Purchase")
+
+# Remove window decorations (title bar, borders, etc.)
+root.overrideredirect(1)
+
+# Set window transparency and always on top
+root.attributes("-alpha", 0.7)  # Set the alpha value between 0 (fully transparent) and 1 (opaque)
+root.attributes("-topmost", True)
+
+# Custom title bar frame
+title_bar = tk.Frame(root, bg="#333333", relief=tk.SUNKEN, bd=0)
+title_bar.pack(fill=tk.X, padx=0, pady=0, ipadx=0, ipady=0, anchor="n")
+
+# Close button on the title bar
+def close_window():
+    root.destroy()
+
+close_button = tk.Button(title_bar, text="X", bg="#333333", fg="white", command=close_window)
+close_button.pack(side=tk.RIGHT, padx=5)
+
+# Set fixed window size
+window_width, window_height = 360, 200
+root.geometry(f"{window_width}x{window_height}")
+
+# Make the window draggable
+def on_drag(event):
+    x = root.winfo_pointerx() - root._offset_x
+    y = root.winfo_pointery() - root._offset_y
+    root.geometry("+%d+%d" % (x, y))
+
+def on_drag_start(event):
+    root._offset_x = event.x
+    root._offset_y = event.y
+
+title_bar.bind("<B1-Motion>", on_drag)
+title_bar.bind("<ButtonPress-1>", on_drag_start)
 
 # Create widgets
 credits_label = tk.Label(root, text="Detected credits: N/A")  # Initial value before scanning
 credits_entry = tk.Entry(root)
-suggest_button = tk.Button(root, text="Get Suggested Purchase", command=get_suggested_purchase)
 weapon_label = tk.Label(root)
 armor_label = tk.Label(root)
 key_binding_label = tk.Label(root, text="Rebind Generating key to (Default P):")
 key_binding_entry = tk.Entry(root)
 
-# Grid layout
-credits_label.grid(row=0, column=0, padx=10, pady=5)
-credits_entry.grid(row=0, column=1, padx=10, pady=5)
-suggest_button.grid(row=1, columnspan=2, padx=10, pady=5)
+# Grid layout with adjustments
+title_bar.grid(row=0, column=0, columnspan=2, sticky="ew")
+credits_label.grid(row=1, column=0, padx=10, pady=5, columnspan=2)
 weapon_label.grid(row=2, column=0, padx=10, pady=5)
 armor_label.grid(row=2, column=1, padx=10, pady=5)
 key_binding_label.grid(row=3, column=0, padx=10, pady=5)
@@ -193,6 +230,10 @@ key_binding_button.grid(row=4, columnspan=2, padx=10, pady=5)
 # Create the listener for 'B' key press event
 keyboard_listener = keyboard.Listener(on_press=on_key_press)
 keyboard_listener.start()
+
+# Start the pynput keypress listener in a separate thread
+listener_thread = threading.Thread(target=pynput_listener, daemon=True)
+listener_thread.start()
 
 # Run the Tkinter event loop
 root.mainloop()
